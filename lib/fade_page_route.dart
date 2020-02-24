@@ -75,8 +75,6 @@ class _FadeInPageTransition extends StatelessWidget {
   final Animation<Offset> _positionAnimation;
   final Animation<double> _opacityAnimation;
   final Widget child;
-
-
   
   @override
   Widget build(BuildContext context) {

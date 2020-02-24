@@ -51,9 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     Navigator.push(
       context, 
-      FadePageRoute(
-        builder: (context) => Screen2()
-      )
+      transitionRoute(Screen2())
+      // FadePageRoute(
+      //   builder: (context) => Screen2()
+      // )
       // PageRouteBuilder(
       //   pageBuilder: (BuildContext context, Animation<double> animatioin, Animation<double> secondaryAnimation){
       //     return Screen2();
@@ -114,11 +115,30 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          RaisedButton(
+            onPressed: (){
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => Screen2())
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text('Page route material'),
+            ),
+          ), // This trailing comma makes auto-formatting nicer for build methods.
+          RaisedButton(
+            onPressed: _incrementCounter,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Text('Page route builder'),
+            ),
+          ), // This trailing comma makes auto-formatting nicer for build methods.
+        ],
+      )
     );
   }
 }
@@ -140,21 +160,24 @@ Route transitionRoute(Widget child) {
     opaque: false,
     pageBuilder: (context, animation, secondaryAnimation) => child,
     transitionsBuilder: (context, animation, secondaryAnimation, child){
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(0.0, 0.25);
       var end = Offset.zero;
-      var curve = Curves.easeOut;
+      var curve = Curves.fastOutSlowIn;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
       return SlideTransition(
         position: animation.drive(tween),
-        child: Material(
-          color: Colors.white.withOpacity(0.1),
-          child: BackdropFilter(
-            filter: ui.ImageFilter.blur(
-              sigmaX: 20.0,
-              sigmaY: 20.0,
+        child: FadeTransition(
+          opacity: animation,
+          child: Material(
+            color: Colors.white.withOpacity(0.1),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(
+                sigmaX: 20.0,
+                sigmaY: 20.0,
+              ),
+              child: child,
             ),
-            child: child,
-          ),
+          )
         )
       );
     }
